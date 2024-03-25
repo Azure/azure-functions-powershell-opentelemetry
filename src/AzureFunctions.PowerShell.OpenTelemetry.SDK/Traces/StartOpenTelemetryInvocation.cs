@@ -9,9 +9,9 @@ using OpenTelemetryEngine.Types;
 
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
-    [Cmdlet(VerbsData.Initialize, "OpenTelemetryInvocation")]
+    [Cmdlet(VerbsLifecycle.Start, "OpenTelemetryInvocation")]
     [OutputType(typeof(ActivityWrapper))]
-    public class InitializeOpenTelemetryInvocation : PSCmdlet
+    public class StartOpenTelemetryInvocation : PSCmdlet
     {
         [Parameter(Mandatory = true, Position = 0)]
         public string InvocationId { get; set; } = string.Empty;

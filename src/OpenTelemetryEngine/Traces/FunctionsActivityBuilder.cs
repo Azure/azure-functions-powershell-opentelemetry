@@ -39,6 +39,14 @@ namespace OpenTelemetryEngine.Traces
             return new ActivityWrapper(activity);
         }
 
+        public static void StopInternalActivity(string invocationId)
+        {
+            if (internalActivitiesByInvocationId.Keys.Contains(invocationId)) 
+            {
+                internalActivitiesByInvocationId[invocationId].Stop();
+            }
+        }
+
         public static ActivityWrapper StartActivity(string? activityName)
         {
             
