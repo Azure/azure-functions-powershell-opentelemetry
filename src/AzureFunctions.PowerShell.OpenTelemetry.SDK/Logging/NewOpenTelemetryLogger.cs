@@ -10,7 +10,7 @@ using OpenTelemetryEngine.Types;
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
     [Cmdlet(VerbsCommon.New, "OpenTelemetryLogger")]
-    [OutputType(typeof(LoggerWrapper))]
+    [OutputType(typeof(FunctionsLogger))]
     public class NewOpenTelemetryLogger : PSCmdlet
     {
         // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called

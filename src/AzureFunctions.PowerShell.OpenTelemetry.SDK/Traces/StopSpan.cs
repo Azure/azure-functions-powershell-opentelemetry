@@ -13,7 +13,7 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
     public class StopSpan : PSCmdlet
     {
         [Parameter(Mandatory = true, Position = 0)]
-        public ActivityWrapper? Activity { get; set; }
+        public FunctionsActivity? Activity { get; set; }
         // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {

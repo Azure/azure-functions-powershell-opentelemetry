@@ -10,7 +10,7 @@ using OpenTelemetryEngine.Types;
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
     [Cmdlet(VerbsLifecycle.Start, "OpenTelemetryInvocation")]
-    [OutputType(typeof(ActivityWrapper))]
+    [OutputType(typeof(FunctionsActivity))]
     public class StartOpenTelemetryInvocation : PSCmdlet
     {
         [Parameter(Mandatory = true, Position = 0)]

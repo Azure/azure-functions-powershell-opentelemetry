@@ -1,16 +1,16 @@
-﻿//
+//
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
-using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace OpenTelemetryEngine.Types
 {
-    public class LoggerWrapper
+    public class FunctionsActivity
     {
-        public ILogger logger;
+        public Activity? activity;
 
-        public LoggerWrapper(ILogger logger) {  this.logger = logger; }
+        public FunctionsActivity(Activity? activity) {  this.activity = activity; }
     }
 }

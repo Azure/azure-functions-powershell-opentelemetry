@@ -12,7 +12,7 @@ namespace OpenTelemetryEngine.Logging
 {
     public class FunctionsLoggerBuilder 
     {
-        internal static LoggerWrapper? _logger;
+        internal static FunctionsLogger? _logger;
 
         public static void SetLogger()
         {
@@ -26,11 +26,11 @@ namespace OpenTelemetryEngine.Logging
                     });
                 });
 
-                _logger = new LoggerWrapper(loggerFactory.CreateLogger("Azure Functions PowerShell"));
+                _logger = new FunctionsLogger(loggerFactory.CreateLogger("Azure Functions PowerShell"));
             }
         }
         
-        public static LoggerWrapper GetLogger() 
+        public static FunctionsLogger GetLogger() 
         {
             SetLogger();
 
@@ -40,21 +40,6 @@ namespace OpenTelemetryEngine.Logging
             }
 
             return _logger;
-        }
-
-        public static void Log(object? logItem, string? level) 
-        {
-            var logger = GetLogger();
-            if (Enum.TryParse(typeof(LogLevel), level, out var _logLevel)) {
-                if (logItem is not null && _logLevel is not null) {
-                    logger.logger.Log((LogLevel)_logLevel, logItem.ToString());
-                }   
-                else 
-                {
-                    // TODO: Discuss behavior in this case
-                    throw new ArgumentException("Message and/or level was null when attempting to log");
-                }
-            }
         }
     }
 }

@@ -14,14 +14,14 @@ namespace OpenTelemetryEngine.Traces
 
         private static Dictionary<string, Activity> internalActivitiesByInvocationId = new Dictionary<string, Activity>();
 
-        public static ActivityWrapper StartInternalActivity(string invocationId, string traceParent, string traceState) 
+        public static FunctionsActivity StartInternalActivity(string invocationId, string traceParent, string traceState) 
         {
             Activity? activity = source.StartActivity("InternalActivity");
 
             if (activity == null) 
             {
                 Console.WriteLine("WARNING: The InternalActivity was null, logs and spans generated in user code may not link properly to host telemetry");
-                return new ActivityWrapper(null);
+                return new FunctionsActivity(null);
             }
 
             activity.AddTag("invocationId", invocationId);
@@ -36,7 +36,7 @@ namespace OpenTelemetryEngine.Traces
 
             internalActivitiesByInvocationId.Add(invocationId, activity);
 
-            return new ActivityWrapper(activity);
+            return new FunctionsActivity(activity);
         }
 
         public static void StopInternalActivity(string invocationId)
@@ -47,7 +47,7 @@ namespace OpenTelemetryEngine.Traces
             }
         }
 
-        public static ActivityWrapper StartActivity(string? activityName)
+        public static FunctionsActivity StartActivity(string? activityName)
         {
             
             Activity? activity = null;
@@ -70,10 +70,10 @@ namespace OpenTelemetryEngine.Traces
                 }
             }
 
-            return new ActivityWrapper(activity);
+            return new FunctionsActivity(activity);
         }
 
-        public static void StopActivity(ActivityWrapper? activity) 
+        public static void StopActivity(FunctionsActivity? activity) 
         {
             activity?.activity?.Stop();
         }

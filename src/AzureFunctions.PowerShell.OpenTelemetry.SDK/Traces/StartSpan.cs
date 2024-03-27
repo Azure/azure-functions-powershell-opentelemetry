@@ -10,7 +10,7 @@ using OpenTelemetryEngine.Types;
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
     [Cmdlet(VerbsLifecycle.Start, "Span")]
-    [OutputType(typeof(ActivityWrapper))]
+    [OutputType(typeof(FunctionsActivity))]
     public class StartSpan : PSCmdlet
     {
         [Parameter(Mandatory = false, Position = 0)]
