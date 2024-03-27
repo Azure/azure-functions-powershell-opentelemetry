@@ -1,0 +1,3 @@
+Eventually, a function app containing test code for the module will live here
+This will either be used for launch.json or for E2E testing, possibly both
+For now, this directory just serves as the output folder for build.ps1
