@@ -8,9 +8,16 @@ using OpenTelemetryEngine.Traces;
 
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
+    /// <summary>
+    /// Cmdlet used by the PowerShell functions worker at the end of an invocation, to stop the worker's internal activity.
+    /// Ensures that the activity length is correct and resources are disposed properly. 
+    /// </summary>
     [Cmdlet(VerbsLifecycle.Stop, "OpenTelemetryInvocation")]
     public class StopOpenTelemetryInvocation : PSCmdlet
     {
+        /// <summary>
+        /// ID of the invocation that just ended. 
+        /// </summary>
         [Parameter(Mandatory = true, Position = 0)]
         public string InvocationId { get; set; } = string.Empty;
 

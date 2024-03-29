@@ -8,6 +8,11 @@ using OpenTelemetryEngine.Logging;
 
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
+    /// <summary>
+    /// A cmdlet that can be used to manually log information to the OTLP endpoint. 
+    /// Now that the worker supports log forwarding with Get-FunctionsLogHandler, this cmdlet is likely not needed for most customers. 
+    /// It may be handy for testing or very specific scenarios where the customer does not want logs flowing through the worker. 
+    /// </summary>
     [Cmdlet(VerbsCommunications.Write, "OpenTelemetryLog")]
     public class WriteOpenTelemetryLog : PSCmdlet
     {
@@ -17,7 +22,6 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
         [Parameter(Mandatory = true, Position = 1)]
         public object? Level { get; set; }
 
-        // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
             FunctionsLoggerBuilder.GetLogger().Log(LogItem, Level?.ToString());

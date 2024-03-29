@@ -9,9 +9,16 @@ using OpenTelemetryEngine.Types;
 
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
+    /// <summary>
+    /// Cmdlet to stop the span for the given activity.
+    /// Required for each call to Start-Span
+    /// </summary>
     [Cmdlet(VerbsLifecycle.Stop, "Span")]
     public class StopSpan : PSCmdlet
     {
+        /// <summary>
+        ///  The activity to stop.
+        /// </summary>
         [Parameter(Mandatory = true, Position = 0)]
         public FunctionsActivity? Activity { get; set; }
         // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
