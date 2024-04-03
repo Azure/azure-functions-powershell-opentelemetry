@@ -14,7 +14,8 @@ namespace OpenTelemetryEngine.Traces
         public static void BuildTracer(List<string> AdditionalSources, string b)
         {
             var tracerBuilder = Sdk.CreateTracerProviderBuilder()
-                .AddSource("Azure Functions");
+                .AddSource("AzureFunctions")
+                .AddSource("AzureFunctionsInternal");
 
             foreach (string source in AdditionalSources)
             {
@@ -23,6 +24,7 @@ namespace OpenTelemetryEngine.Traces
 
             tracerBuilder
                 .ConfigureResource(x => x.AddDetector(new FunctionsResourceDetector()))
+                .AddProcessor(TraceFilterProcessor.Instance)
                 .AddOtlpExporter()
                 .Build();
         }

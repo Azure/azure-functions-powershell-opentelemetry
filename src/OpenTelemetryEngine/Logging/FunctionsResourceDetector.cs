@@ -1,48 +1,36 @@
-//
-// Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
-//
-
 using OpenTelemetry.Resources;
 using OpenTelemetryEngine.Constants;
-
-namespace OpenTelemetryEngine.Logging
+namespace Microsoft.Azure.Functions.Worker.OpenTelemetry
 {
-
     public sealed class FunctionsResourceDetector : IResourceDetector
-    {
-        internal static readonly IReadOnlyDictionary<string, string> AppServiceResourceAttributes = new Dictionary<string, string>
+    {  
+        internal static readonly IReadOnlyDictionary<string, string> ResourceAttributes = new Dictionary<string, string>(1)
         {
-            { ResourceAttributeConstants.AttributeCloudRegion, ResourceAttributeConstants.AppServiceRegionNameEnvVar },
-            //{ ResourceSemanticConventions.AttributeDeploymentEnvironment, ResourceAttributeConstants.AppServiceSlotNameEnvVar },
-            //{ ResourceSemanticConventions.AttributeHostId, ResourceAttributeConstants.AppServiceHostNameEnvVar },
-            //{ ResourceSemanticConventions.AttributeServiceInstance, ResourceAttributeConstants.AppServiceInstanceIdEnvVar },
-            { ResourceAttributeConstants.AzureAppServiceStamp, ResourceAttributeConstants.AppServiceStampNameEnvVar },
+            { ResourceAttributeConstants.AttributeCloudRegion, ResourceAttributeConstants.RegionNameEnvVar },
         };
 
         /// <inheritdoc/>
         public Resource Detect()
         {
-            List<KeyValuePair<string, object>> attributeList = new();
-
+            List<KeyValuePair<string, object>> attributeList = new(5);
             try
             {
-                var websiteSiteName = Environment.GetEnvironmentVariable(ResourceAttributeConstants.AppServiceSiteNameEnvVar);
+                var siteName = Environment.GetEnvironmentVariable(ResourceAttributeConstants.SiteNameEnvVar);
                 attributeList.Add(new KeyValuePair<string, object>(ResourceAttributeConstants.AttributeCloudProvider, ResourceAttributeConstants.AzureCloudProviderValue));
-                attributeList.Add(new KeyValuePair<string, object>(ResourceAttributeConstants.AttributeCloudPlatform, ResourceAttributeConstants.AzureAppServicePlatformValue));
+                attributeList.Add(new KeyValuePair<string, object>(ResourceAttributeConstants.AttributeCloudPlatform, ResourceAttributeConstants.AzurePlatformValue));
 
-                if (websiteSiteName != null)
+                var version = typeof(FunctionsResourceDetector).Assembly.GetName().Version.ToString();
+                
+                attributeList.Add(new KeyValuePair<string, object>(ResourceAttributeConstants.AttributeVersion, version)); 
+                if (!string.IsNullOrEmpty(siteName))
                 {
-                    //attributeList.Add(new KeyValuePair<string, object>(ResourceSemanticConventions.AttributeServiceName, websiteSiteName));
-
-
-                    var azureResourceUri = GetAzureResourceURI(websiteSiteName);
+                    var azureResourceUri = GetAzureResourceURI(siteName);
                     if (azureResourceUri != null)
                     {
                         attributeList.Add(new KeyValuePair<string, object>(ResourceAttributeConstants.AttributeCloudResourceId, azureResourceUri));
                     }
 
-                    foreach (var kvp in AppServiceResourceAttributes)
+                    foreach (var kvp in ResourceAttributes)
                     {
                         var attributeValue = Environment.GetEnvironmentVariable(kvp.Value);
                         if (attributeValue != null)
@@ -54,32 +42,31 @@ namespace OpenTelemetryEngine.Logging
             }
             catch
             {
-                // TODO: log exception.
+                // return empty resource.
                 return Resource.Empty;
             }
 
             return new Resource(attributeList);
         }
-
         private static string? GetAzureResourceURI(string websiteSiteName)
         {
-            string? websiteResourceGroup = Environment.GetEnvironmentVariable(ResourceAttributeConstants.AppServiceResourceGroupEnvVar);
-            string websiteOwnerName = Environment.GetEnvironmentVariable(ResourceAttributeConstants.AppServiceOwnerNameEnvVar) ?? string.Empty;
+            string? websiteResourceGroup = Environment.GetEnvironmentVariable(ResourceAttributeConstants.ResourceGroupEnvVar);
+            string? websiteOwnerName = Environment.GetEnvironmentVariable(ResourceAttributeConstants.OwnerNameEnvVar);
 
-#if NET6_0_OR_GREATER
-            int idx = websiteOwnerName.IndexOf('+', StringComparison.Ordinal);
-#else
+            if (string.IsNullOrEmpty(websiteResourceGroup) || string.IsNullOrEmpty(websiteOwnerName))
+            {
+                return null;
+            }
+
             int idx = websiteOwnerName.IndexOf("+", StringComparison.Ordinal);
-#endif
             string subscriptionId = idx > 0 ? websiteOwnerName.Substring(0, idx) : websiteOwnerName;
 
-            if (string.IsNullOrEmpty(websiteResourceGroup) || string.IsNullOrEmpty(subscriptionId))
+            if (string.IsNullOrEmpty(subscriptionId))
             {
                 return null;
             }
 
             return $"/subscriptions/{subscriptionId}/resourceGroups/{websiteResourceGroup}/providers/Microsoft.Web/sites/{websiteSiteName}";
         }
-
     }
 }

@@ -10,13 +10,14 @@ namespace OpenTelemetryEngine.Traces
 { 
     public class FunctionsActivityBuilder
     {
-        public static ActivitySource source = new ActivitySource("Azure Functions");
+        public static ActivitySource sourceInternal = new ActivitySource("AzureFunctionsInternal");
+        public static ActivitySource source = new ActivitySource("AzureFunctions");
 
         private static Dictionary<string, Activity> internalActivitiesByInvocationId = new Dictionary<string, Activity>();
 
         public static FunctionsActivity StartInternalActivity(string invocationId, string traceParent, string traceState) 
         {
-            Activity? activity = source.StartActivity("InternalActivity");
+            Activity? activity = sourceInternal.StartActivity("InternalActivity");
 
             if (activity == null) 
             {
@@ -49,8 +50,7 @@ namespace OpenTelemetryEngine.Traces
 
         public static FunctionsActivity StartActivity(string? activityName)
         {
-            
-            Activity? activity = null;
+            Activity? activity;
             if (!string.IsNullOrEmpty(activityName))
             {
                 activity = source.StartActivity(activityName);
