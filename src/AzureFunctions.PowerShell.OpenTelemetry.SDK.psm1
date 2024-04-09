@@ -7,6 +7,6 @@ function Initialize-FunctionsOpenTelemetry {
     param()
     $ErrorActionPreference = 'Stop'
     
-    New-OpenTelemetryLogger | Out-Null
-    New-TracerBuilder | Out-Null
+    New-FunctionsOpenTelemetryLogger | Out-Null
+    New-FunctionsOpenTelemetryTracerBuilder | Out-Null
 }

@@ -12,13 +12,13 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
     /// Cmdlet to get the log handler for the functions logger.
     /// This handler allows the worker to send logs back to the logger we set up in the FunctionsLoggerBuilder.
     /// </summary>
-    [Cmdlet(VerbsCommon.Get, "FunctionsLogHandler")]
+    [Cmdlet(VerbsCommon.Get, "FunctionsLogHandlerInternal")]
     [OutputType(typeof(Action<string, string, Exception>))]
-    public class GetFunctionsLogHandlerCmdlet : Cmdlet
+    public class GetFunctionsLogHandlerInternal : Cmdlet
     {
         protected override void ProcessRecord()
         {
-            WriteObject(FunctionsLoggerBuilder.GetLogger().handleEventLogs);
+            WriteObject(FunctionsLoggerBuilder.GetLogger().WorkerLogHandler);
         }
     }
 }

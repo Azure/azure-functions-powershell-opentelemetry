@@ -14,12 +14,18 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
     /// This Logger is configured with an OTLP exporter that will send logs to an OTLP endpoint defined by the user
     /// See https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.OpenTelemetryProtocol/README.md
     /// </summary>
-    [Cmdlet(VerbsCommon.New, "OpenTelemetryLogger")]
+    [Cmdlet(VerbsCommon.New, "FunctionsOpenTelemetryLogger")]
     [OutputType(typeof(FunctionsLogger))]
-    public class NewOpenTelemetryLogger : PSCmdlet
+    public class NewFunctionsOpenTelemetryLogger : PSCmdlet
     {
         protected override void ProcessRecord()
         {
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SDKConstants.FunctionsOpenTelemetryEnvironmentVariableName))) 
+            {
+                WriteError(new ErrorRecord(new InvalidOperationException("OpenTelemetry environment variable not set, logs from your function app's default logging pipeline will not be sent to OpenTelemetry")
+                        , SDKConstants.EnvironmentVariableMissingErrorCategory, ErrorCategory.InvalidOperation, null));
+            }
+
             WriteObject(FunctionsLoggerBuilder.GetLogger());
         }
     }

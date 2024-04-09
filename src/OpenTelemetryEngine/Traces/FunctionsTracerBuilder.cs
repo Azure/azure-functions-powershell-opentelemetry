@@ -5,17 +5,18 @@
 
 using OpenTelemetry;
 using OpenTelemetry.Trace;
+using OpenTelemetryEngine.Constants;
 using OpenTelemetryEngine.Logging;
 
 namespace OpenTelemetryEngine.Traces
 {
     public static class FunctionsTracerBuilder
     {
-        public static void BuildTracer(List<string> AdditionalSources, string b)
+        public static void BuildTracer(List<string> AdditionalSources)
         {
             var tracerBuilder = Sdk.CreateTracerProviderBuilder()
-                .AddSource("AzureFunctions")
-                .AddSource("AzureFunctionsInternal");
+                .AddSource(OpenTelemetryModuleConstants.ActivitySourceName)
+                .AddSource(OpenTelemetryModuleConstants.InternalActivitySourceName);
 
             foreach (string source in AdditionalSources)
             {

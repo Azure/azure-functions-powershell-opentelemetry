@@ -4,6 +4,7 @@
 //
 
 using System.Diagnostics;
+using OpenTelemetryEngine.Constants;
 using OpenTelemetryEngine.Types;
 
 namespace OpenTelemetryEngine.Traces
@@ -11,7 +12,7 @@ namespace OpenTelemetryEngine.Traces
     public class FunctionsActivityBuilder
     {
         public static ActivitySource sourceInternal = new ActivitySource("AzureFunctionsInternal");
-        public static ActivitySource source = new ActivitySource("AzureFunctions");
+        public static ActivitySource source = new ActivitySource(OpenTelemetryModuleConstants.ActivitySourceName);
 
         private static Dictionary<string, Activity> internalActivitiesByInvocationId = new Dictionary<string, Activity>();
 
@@ -62,8 +63,6 @@ namespace OpenTelemetryEngine.Traces
 
             if (activity is not null && activity.Parent is not null) 
             {
-                // This is so that the invocation ID and other tags manually added to the InternalActivity will propogate to user activities. 
-                // TODO: Evaluate whether we should attach all tags from all parent spans to all child spans, or limit scope a bit more
                 foreach (var tag in activity.Parent.Tags) 
                 {
                     activity.AddTag(tag.Key, tag.Value);

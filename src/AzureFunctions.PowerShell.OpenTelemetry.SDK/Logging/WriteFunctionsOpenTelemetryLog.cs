@@ -13,18 +13,24 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
     /// Now that the worker supports log forwarding with Get-FunctionsLogHandler, this cmdlet is likely not needed for most customers. 
     /// It may be handy for testing or very specific scenarios where the customer does not want logs flowing through the worker. 
     /// </summary>
-    [Cmdlet(VerbsCommunications.Write, "OpenTelemetryLog")]
-    public class WriteOpenTelemetryLog : PSCmdlet
+    [Cmdlet(VerbsCommunications.Write, "FunctionsOpenTelemetryLog")]
+    public class WriteFunctionsOpenTelemetryLog : PSCmdlet
     {
-        [Parameter(Mandatory = true, Position = 0)]
+        [Parameter(Mandatory = true)]
         public object? LogItem { get; set; }
 
-        [Parameter(Mandatory = true, Position = 1)]
+        [Parameter(Mandatory = true)]
         public object? Level { get; set; }
 
         protected override void ProcessRecord()
         {
             FunctionsLoggerBuilder.GetLogger().Log(LogItem, Level?.ToString());
+
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SDKConstants.FunctionsOpenTelemetryEnvironmentVariableName))) 
+            {
+                WriteError(new ErrorRecord(new InvalidOperationException("OpenTelemetry environment variable not set, the log will not be correlated with the invocation")
+                        , SDKConstants.EnvironmentVariableMissingErrorCategory, ErrorCategory.InvalidOperation, null));
+            }
         }
     }
 }

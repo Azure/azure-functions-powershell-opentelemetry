@@ -71,7 +71,7 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK.AssemblyLoader
                 return null;
             }
 
-            // We load the Durable Engine assembly through the Dependency ALC, the context in which
+            // We load the OpenTelemetry Engine assembly through the Dependency ALC, the context in which
             // all of its dependencies will be resolved (preventing potential conflicts with the
             // PowerShell worker's dependencies).
             return singletonALC.LoadFromAssemblyName(assemblyName);

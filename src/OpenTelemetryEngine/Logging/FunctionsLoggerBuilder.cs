@@ -12,7 +12,7 @@ namespace OpenTelemetryEngine.Logging
 {
     public class FunctionsLoggerBuilder 
     {
-        internal static FunctionsLogger? _logger;
+        private static FunctionsLogger? _logger;
 
         public static void SetLogger()
         {
@@ -33,11 +33,6 @@ namespace OpenTelemetryEngine.Logging
         public static FunctionsLogger GetLogger() 
         {
             SetLogger();
-
-            if (_logger is null)
-            {
-                throw new InvalidOperationException("Logger was null after SetLogger() call");
-            }
 
             return _logger;
         }

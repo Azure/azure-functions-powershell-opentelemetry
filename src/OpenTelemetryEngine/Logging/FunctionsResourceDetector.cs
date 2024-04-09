@@ -1,6 +1,11 @@
+//
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+//
 using OpenTelemetry.Resources;
 using OpenTelemetryEngine.Constants;
-namespace Microsoft.Azure.Functions.Worker.OpenTelemetry
+
+namespace OpenTelemetryEngine.Logging
 {
     public sealed class FunctionsResourceDetector : IResourceDetector
     {  
@@ -12,15 +17,20 @@ namespace Microsoft.Azure.Functions.Worker.OpenTelemetry
         /// <inheritdoc/>
         public Resource Detect()
         {
-            List<KeyValuePair<string, object>> attributeList = new(5);
+            List<KeyValuePair<string, object>> attributeList = new List<KeyValuePair<string, object>>();
             try
             {
-                var siteName = Environment.GetEnvironmentVariable(ResourceAttributeConstants.SiteNameEnvVar);
+                var siteName = Environment.GetEnvironmentVariable(ResourceAttributeConstants.SiteNameEnvVar)?.Trim();
                 attributeList.Add(new KeyValuePair<string, object>(ResourceAttributeConstants.AttributeCloudProvider, ResourceAttributeConstants.AzureCloudProviderValue));
                 attributeList.Add(new KeyValuePair<string, object>(ResourceAttributeConstants.AttributeCloudPlatform, ResourceAttributeConstants.AzurePlatformValue));
 
-                var version = typeof(FunctionsResourceDetector).Assembly.GetName().Version.ToString();
+                var version = typeof(FunctionsResourceDetector).Assembly.GetName().Version?.ToString();
                 
+                if (string.IsNullOrEmpty(version))
+                {
+                    version = "unknown";
+                } 
+
                 attributeList.Add(new KeyValuePair<string, object>(ResourceAttributeConstants.AttributeVersion, version)); 
                 if (!string.IsNullOrEmpty(siteName))
                 {

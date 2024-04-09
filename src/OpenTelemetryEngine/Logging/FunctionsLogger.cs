@@ -21,13 +21,12 @@ namespace OpenTelemetryEngine.Types
                 }   
                 else 
                 {
-                    // TODO: Discuss behavior in this case
                     throw new ArgumentException("Message and/or level was null when attempting to log");
                 }
             }
         }
 
-        public void handleEventLogs(string level, string message, Exception exception) 
+        public void WorkerLogHandler(string level, string message, Exception exception) 
         {
             Log(message, level, exception);
         }

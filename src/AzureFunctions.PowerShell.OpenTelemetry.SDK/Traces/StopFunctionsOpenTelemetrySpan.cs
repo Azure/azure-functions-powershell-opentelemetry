@@ -5,26 +5,26 @@
 
 using System.Management.Automation;
 using OpenTelemetryEngine.Traces;
+using OpenTelemetryEngine.Types;
 
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
     /// <summary>
-    /// Cmdlet used by the PowerShell functions worker at the end of an invocation, to stop the worker's internal activity.
-    /// Ensures that the activity length is correct and resources are disposed properly. 
+    /// Cmdlet to stop the span for the given activity.
+    /// Required for each call to Start-Span
     /// </summary>
-    [Cmdlet(VerbsLifecycle.Stop, "OpenTelemetryInvocation")]
-    public class StopOpenTelemetryInvocation : PSCmdlet
+    [Cmdlet(VerbsLifecycle.Stop, "FunctionsOpenTelemetrySpan")]
+    public class StopFunctionsOpenTelemetrySpan : PSCmdlet
     {
         /// <summary>
-        /// ID of the invocation that just ended. 
+        ///  The activity to stop.
         /// </summary>
-        [Parameter(Mandatory = true, Position = 0)]
-        public string InvocationId { get; set; } = string.Empty;
-
+        [Parameter(Mandatory = true)]
+        public FunctionsActivity? Span { get; set; }
         // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            FunctionsActivityBuilder.StopInternalActivity(InvocationId);
+            FunctionsActivityBuilder.StopActivity(Span);
         }
     }
 }

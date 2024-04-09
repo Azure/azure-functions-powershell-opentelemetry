@@ -13,18 +13,24 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
     /// Manually starts a span (Activity) at the request of the user. 
     /// It is required to capture the returned Activity and pass it to Stop-Span to end the span.
     /// </summary>
-    [Cmdlet(VerbsLifecycle.Start, "Span")]
+    [Cmdlet(VerbsLifecycle.Start, "FunctionsOpenTelemetrySpan")]
     [OutputType(typeof(FunctionsActivity))]
-    public class StartSpan : PSCmdlet
+    public class StartFunctionsOpenTelemetrySpan : PSCmdlet
     {
         /// <summary>
         /// The name of the span (optional)
         /// </summary>
-        [Parameter(Mandatory = false, Position = 0)]
+        [Parameter(Mandatory = false)]
         public string? ActivityName { get; set; }
         // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SDKConstants.FunctionsOpenTelemetryEnvironmentVariableName))) 
+            {
+                WriteError(new ErrorRecord(new InvalidOperationException("OpenTelemetry environment variable not set, the span will not be correlated with the invocation span coming from functions host")
+                        , SDKConstants.EnvironmentVariableMissingErrorCategory, ErrorCategory.InvalidOperation, null));
+            }
+
             WriteObject(FunctionsActivityBuilder.StartActivity(ActivityName));
         }
     }

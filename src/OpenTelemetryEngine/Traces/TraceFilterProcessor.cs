@@ -14,11 +14,6 @@ namespace OpenTelemetryEngine.Traces
         {
             DropInternalActivities(data);
 
-            if (data.ActivityTraceFlags != ActivityTraceFlags.None)
-            {
-                // Console.WriteLine("Didn't drop Activity: {0}", data.DisplayName);
-            }
-
             base.OnEnd(data);
         }
 
@@ -29,7 +24,6 @@ namespace OpenTelemetryEngine.Traces
                 if (data.DisplayName == "InternalActivity" && data.Source.Name == "AzureFunctionsInternal")  
                 {
                     data.ActivityTraceFlags = ActivityTraceFlags.None;
-                    // Console.WriteLine("Dropped Activity: {0}", data.DisplayName);
                 }
             }
         }
