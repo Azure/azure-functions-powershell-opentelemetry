@@ -4,6 +4,7 @@
 //
 
 using Microsoft.Extensions.Logging;
+using OpenTelemetryEngine.ResponseObjects;
 
 namespace OpenTelemetryEngine.Types
 {
@@ -29,6 +30,11 @@ namespace OpenTelemetryEngine.Types
         public void WorkerLogHandler(string level, string message, Exception exception) 
         {
             Log(message, level, exception);
+        }
+
+        public FunctionsLoggerResponse BuildResponse() 
+        {
+            return new FunctionsLoggerResponse(logger);
         }
     }
 }

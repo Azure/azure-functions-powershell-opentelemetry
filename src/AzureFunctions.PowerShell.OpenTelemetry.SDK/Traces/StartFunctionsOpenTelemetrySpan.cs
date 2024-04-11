@@ -5,7 +5,7 @@
 
 using System.Management.Automation;
 using OpenTelemetryEngine.Traces;
-using OpenTelemetryEngine.Types;
+using OpenTelemetryEngine.ResponseObjects;
 
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
@@ -14,7 +14,7 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
     /// It is required to capture the returned Activity and pass it to Stop-Span to end the span.
     /// </summary>
     [Cmdlet(VerbsLifecycle.Start, "FunctionsOpenTelemetrySpan")]
-    [OutputType(typeof(FunctionsActivity))]
+    [OutputType(typeof(FunctionsActivityResponse))]
     public class StartFunctionsOpenTelemetrySpan : PSCmdlet
     {
         /// <summary>
@@ -31,7 +31,9 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
                         , SDKConstants.EnvironmentVariableMissingErrorCategory, ErrorCategory.InvalidOperation, null));
             }
 
-            WriteObject(FunctionsActivityBuilder.StartActivity(ActivityName));
+            var response = FunctionsActivityBuilder.StartActivity(ActivityName);
+
+            WriteObject(response);
         }
     }
 }

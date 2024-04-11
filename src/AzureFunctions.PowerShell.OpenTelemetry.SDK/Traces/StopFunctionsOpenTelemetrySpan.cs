@@ -5,7 +5,7 @@
 
 using System.Management.Automation;
 using OpenTelemetryEngine.Traces;
-using OpenTelemetryEngine.Types;
+using OpenTelemetryEngine.ResponseObjects;
 
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
@@ -20,7 +20,7 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
         ///  The activity to stop.
         /// </summary>
         [Parameter(Mandatory = true)]
-        public FunctionsActivity? Span { get; set; }
+        public FunctionsActivityResponse? Span { get; set; }
         // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {

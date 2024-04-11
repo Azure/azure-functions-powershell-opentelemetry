@@ -5,12 +5,12 @@
 
 using System.Diagnostics;
 
-namespace OpenTelemetryEngine.Types
+namespace OpenTelemetryEngine.ResponseObjects
 {
-    public class FunctionsActivity
+    public class FunctionsActivityResponse
     {
         public Activity? activity;
 
-        public FunctionsActivity(Activity? activity) {  this.activity = activity; }
+        public FunctionsActivityResponse(Activity? activity) {  this.activity = activity; }
     }
 }

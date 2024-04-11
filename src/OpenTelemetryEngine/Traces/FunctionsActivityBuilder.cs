@@ -5,7 +5,7 @@
 
 using System.Diagnostics;
 using OpenTelemetryEngine.Constants;
-using OpenTelemetryEngine.Types;
+using OpenTelemetryEngine.ResponseObjects;
 
 namespace OpenTelemetryEngine.Traces
 { 
@@ -16,14 +16,14 @@ namespace OpenTelemetryEngine.Traces
 
         private static Dictionary<string, Activity> internalActivitiesByInvocationId = new Dictionary<string, Activity>();
 
-        public static FunctionsActivity StartInternalActivity(string invocationId, string traceParent, string traceState) 
+        public static FunctionsActivityResponse StartInternalActivity(string invocationId, string traceParent, string traceState) 
         {
             Activity? activity = sourceInternal.StartActivity("InternalActivity");
 
             if (activity == null) 
             {
                 Console.WriteLine("WARNING: The InternalActivity was null, logs and spans generated in user code may not link properly to host telemetry");
-                return new FunctionsActivity(null);
+                return new FunctionsActivityResponse(null);
             }
 
             activity.AddTag("invocationId", invocationId);
@@ -38,7 +38,7 @@ namespace OpenTelemetryEngine.Traces
 
             internalActivitiesByInvocationId.Add(invocationId, activity);
 
-            return new FunctionsActivity(activity);
+            return new FunctionsActivityResponse(activity);
         }
 
         public static void StopInternalActivity(string invocationId)
@@ -49,7 +49,7 @@ namespace OpenTelemetryEngine.Traces
             }
         }
 
-        public static FunctionsActivity StartActivity(string? activityName)
+        public static FunctionsActivityResponse StartActivity(string? activityName)
         {
             Activity? activity;
             if (!string.IsNullOrEmpty(activityName))
@@ -69,10 +69,10 @@ namespace OpenTelemetryEngine.Traces
                 }
             }
 
-            return new FunctionsActivity(activity);
+            return new FunctionsActivityResponse(activity);
         }
 
-        public static void StopActivity(FunctionsActivity? activity) 
+        public static void StopActivity(FunctionsActivityResponse? activity) 
         {
             activity?.activity?.Stop();
         }

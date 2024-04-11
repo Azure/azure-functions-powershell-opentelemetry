@@ -4,6 +4,7 @@
 //
 
 using System.Management.Automation;
+using OpenTelemetryEngine.ResponseObjects;
 using OpenTelemetryEngine.Traces;
 
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
@@ -14,6 +15,7 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
     /// See https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.OpenTelemetryProtocol/README.md
     /// </summary>
     [Cmdlet(VerbsCommon.New, "FunctionsOpenTelemetryTracerBuilder")]
+    [OutputType(typeof(FunctionsTracerBuilderResponse))]
     public class NewFunctionsOpenTelemetryTracerBuilder : PSCmdlet
     {
 
@@ -32,7 +34,9 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
                         , SDKConstants.EnvironmentVariableMissingErrorCategory, ErrorCategory.InvalidOperation, null));
             }
 
-            FunctionsTracerBuilder.BuildTracer(AdditionalSources);
+            var response = FunctionsTracerBuilder.BuildTracer(AdditionalSources);
+
+            WriteObject(response);
         }
     }
 }

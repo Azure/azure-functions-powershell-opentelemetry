@@ -27,9 +27,11 @@ namespace OpenTelemetryEngine.Logging
                 });
 
                 _logger = new FunctionsLogger(loggerFactory.CreateLogger("Azure Functions PowerShell"));
+
+                _logger.logger.Log(LogLevel.Information, "Logger initialized");
             }
         }
-        
+
         public static FunctionsLogger GetLogger() 
         {
             SetLogger();

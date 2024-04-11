@@ -7,12 +7,13 @@ using OpenTelemetry;
 using OpenTelemetry.Trace;
 using OpenTelemetryEngine.Constants;
 using OpenTelemetryEngine.Logging;
+using OpenTelemetryEngine.ResponseObjects;
 
 namespace OpenTelemetryEngine.Traces
 {
     public static class FunctionsTracerBuilder
     {
-        public static void BuildTracer(List<string> AdditionalSources)
+        public static FunctionsTracerBuilderResponse BuildTracer(List<string> AdditionalSources)
         {
             var tracerBuilder = Sdk.CreateTracerProviderBuilder()
                 .AddSource(OpenTelemetryModuleConstants.ActivitySourceName)
@@ -28,6 +29,8 @@ namespace OpenTelemetryEngine.Traces
                 .AddProcessor(TraceFilterProcessor.Instance)
                 .AddOtlpExporter()
                 .Build();
+
+            return new FunctionsTracerBuilderResponse();
         }
     }
 }

@@ -5,7 +5,7 @@
 
 using System.Management.Automation;
 using OpenTelemetryEngine.Logging;
-using OpenTelemetryEngine.Types;
+using OpenTelemetryEngine.ResponseObjects;
 
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
@@ -15,7 +15,7 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
     /// See https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.OpenTelemetryProtocol/README.md
     /// </summary>
     [Cmdlet(VerbsCommon.New, "FunctionsOpenTelemetryLogger")]
-    [OutputType(typeof(FunctionsLogger))]
+    [OutputType(typeof(FunctionsLoggerResponse))]
     public class NewFunctionsOpenTelemetryLogger : PSCmdlet
     {
         protected override void ProcessRecord()
@@ -26,7 +26,9 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
                         , SDKConstants.EnvironmentVariableMissingErrorCategory, ErrorCategory.InvalidOperation, null));
             }
 
-            WriteObject(FunctionsLoggerBuilder.GetLogger());
+            var response = FunctionsLoggerBuilder.GetLogger().BuildResponse();
+
+            WriteObject(response);
         }
     }
 }

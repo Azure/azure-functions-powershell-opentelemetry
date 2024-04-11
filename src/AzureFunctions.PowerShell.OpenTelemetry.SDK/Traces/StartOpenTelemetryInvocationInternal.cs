@@ -5,7 +5,7 @@
 
 using System.Management.Automation;
 using OpenTelemetryEngine.Traces;
-using OpenTelemetryEngine.Types;
+using OpenTelemetryEngine.ResponseObjects;
 
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
@@ -15,7 +15,7 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
     /// This allows all new spans created by the user or by dependent modules to link back to the host span using TraceParent. 
     /// </summary>
     [Cmdlet(VerbsLifecycle.Start, "OpenTelemetryInvocationInternal")]
-    [OutputType(typeof(FunctionsActivity))]
+    [OutputType(typeof(FunctionsActivityResponse))]
     public class StartOpenTelemetryInvocationInternal : PSCmdlet
     {
         /// <summary>

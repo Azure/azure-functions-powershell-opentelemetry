@@ -3,23 +3,25 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace OpenTelemetryEngine.Constants
 {
     internal class ResourceAttributeConstants
     {
-        internal const string AttributeCloudProvider = "cloud.provider";
-        internal const string AttributeCloudPlatform = "cloud.platform";
-        internal const string AttributeCloudRegion = "cloud.region";
-        internal const string AttributeCloudResourceId = "cloud.resource.id";        
+        internal const string AISDKPrefix = "ai.sdk.prefix";
+        internal const string ProcessId = "process.pid";
+
+        internal const string ServiceName = "service.name";
+        internal const string ServiceVersion = "service.version";
+
+        internal const string CloudProvider = "cloud.provider";
+        internal const string CloudPlatform = "cloud.platform";
+        internal const string CloudRegion = "cloud.region";
+        internal const string CloudResourceId = "cloud.resource.id";
+   
+        internal const string FaaSVersion = "faas.version";
+        
         internal const string AzureCloudProviderValue = "azure";
         internal const string AzurePlatformValue = "azure_functions";
-        internal const string AttributeSDKPrefix = "ai.sdk.prefix";
-        internal const string AttributeProcessId = "process.pid";
-        internal const string AttributeVersion = "faas.version";
         internal const string SDKPrefix = "azurefunctions";
         internal const string SiteNameEnvVar = "WEBSITE_SITE_NAME";
         internal const string RegionNameEnvVar = "REGION_NAME";
