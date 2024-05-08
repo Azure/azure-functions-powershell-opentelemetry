@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using OpenTelemetryEngine.Constants;
 using OpenTelemetryEngine.ResponseObjects;
@@ -14,7 +15,7 @@ namespace OpenTelemetryEngine.Traces
         public static ActivitySource sourceInternal = new ActivitySource("AzureFunctionsInternal");
         public static ActivitySource source = new ActivitySource(OpenTelemetryModuleConstants.ActivitySourceName);
 
-        private static Dictionary<string, Activity> internalActivitiesByInvocationId = new Dictionary<string, Activity>();
+        private static ConcurrentDictionary<string, Activity> internalActivitiesByInvocationId = new ConcurrentDictionary<string, Activity>();
 
         public static FunctionsActivityResponse StartInternalActivity(string invocationId, string traceParent, string traceState) 
         {
@@ -36,7 +37,12 @@ namespace OpenTelemetryEngine.Traces
                 activity.SetRootId(activityContext.TraceId.ToString());
             }
 
-            internalActivitiesByInvocationId.Add(invocationId, activity);
+            if(!internalActivitiesByInvocationId.TryAdd(invocationId, activity)) 
+            {
+                Console.WriteLine("WARNING: An activity for this InvocationId already exists, stopping this one");
+                activity.Stop();
+                return new FunctionsActivityResponse(null);
+            }
 
             return new FunctionsActivityResponse(activity);
         }
@@ -45,7 +51,19 @@ namespace OpenTelemetryEngine.Traces
         {
             if (internalActivitiesByInvocationId.Keys.Contains(invocationId)) 
             {
-                internalActivitiesByInvocationId[invocationId].Stop();
+                if (internalActivitiesByInvocationId.TryRemove(invocationId, out Activity? activityToStop))
+                {
+                    activityToStop.Stop();
+                }
+                else 
+                {
+                    // There are two reasons why the activity may not be removed from the dictionary:
+                    // 1. The activity was added successfully to the dictionary but was already removed from the dictionary by another thread
+                    //    Due to the architecture of Azure Functions, this is not likely unless the user calls these cmdlets manually
+                    //    If this happens, the activity was already stopped and the user should not be concerned
+                    // 2. The activity was not added successfully to the dictionary
+                    //    This is also not a concern - this only happens if the key already exists and we guard this case in StartInternalActivity
+                }
             }
         }
 
@@ -72,9 +90,9 @@ namespace OpenTelemetryEngine.Traces
             return new FunctionsActivityResponse(activity);
         }
 
-        public static void StopActivity(FunctionsActivityResponse? activity) 
+        public static void StopActivity(FunctionsActivityResponse? response) 
         {
-            activity?.activity?.Stop();
+            response?.activity?.Stop();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace OpenTelemetryEngine.Logging
     {
         private static FunctionsLogger? _logger;
 
-        public static void SetLogger()
+        public static void InitializeLogger()
         {
             if (_logger is null)
             {
@@ -27,14 +27,12 @@ namespace OpenTelemetryEngine.Logging
                 });
 
                 _logger = new FunctionsLogger(loggerFactory.CreateLogger("Azure Functions PowerShell"));
-
-                _logger.logger.Log(LogLevel.Information, "Logger initialized");
             }
         }
 
         public static FunctionsLogger GetLogger() 
         {
-            SetLogger();
+            InitializeLogger();
 
             return _logger;
         }

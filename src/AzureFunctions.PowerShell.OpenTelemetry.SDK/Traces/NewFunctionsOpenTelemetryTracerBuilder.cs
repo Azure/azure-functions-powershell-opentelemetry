@@ -30,8 +30,7 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
         {
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SDKConstants.FunctionsOpenTelemetryEnvironmentVariableName))) 
             {
-                WriteError(new ErrorRecord(new InvalidOperationException("OpenTelemetry environment variable not set, user generated traces will not be linked to parent trace from functions host")
-                        , SDKConstants.EnvironmentVariableMissingErrorCategory, ErrorCategory.InvalidOperation, null));
+                WriteWarning("OpenTelemetry environment variable not set, user generated traces will not be linked to parent trace from functions host");
             }
 
             var response = FunctionsTracerBuilder.BuildTracer(AdditionalSources);

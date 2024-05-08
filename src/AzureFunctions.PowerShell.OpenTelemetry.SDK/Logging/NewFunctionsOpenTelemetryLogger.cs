@@ -22,8 +22,7 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
         {
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SDKConstants.FunctionsOpenTelemetryEnvironmentVariableName))) 
             {
-                WriteError(new ErrorRecord(new InvalidOperationException("OpenTelemetry environment variable not set, logs from your function app's default logging pipeline will not be sent to OpenTelemetry")
-                        , SDKConstants.EnvironmentVariableMissingErrorCategory, ErrorCategory.InvalidOperation, null));
+                WriteWarning("OpenTelemetry environment variable not set, logs from your function app's default logging pipeline will not be sent via this module to OpenTelemetry");
             }
 
             var response = FunctionsLoggerBuilder.GetLogger().BuildResponse();

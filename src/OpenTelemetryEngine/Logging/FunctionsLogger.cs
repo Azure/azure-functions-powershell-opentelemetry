@@ -16,15 +16,23 @@ namespace OpenTelemetryEngine.Types
 
         public void Log(object? logItem, string? level, Exception? exception = null) 
         {
-            if (Enum.TryParse(typeof(LogLevel), level, out var _logLevel)) {
-                if (logItem is not null && _logLevel is not null) {
-                    logger.Log((LogLevel)_logLevel, logItem.ToString(), exception);
-                }   
-                else 
-                {
-                    throw new ArgumentException("Message and/or level was null when attempting to log");
-                }
+            object? logLevelParsed;
+            if (!Enum.TryParse(typeof(LogLevel), level, out logLevelParsed)) 
+            {
+                throw new ArgumentException("Log level was not a valid log level");
             }
+
+            if (logItem is null) 
+            {
+                throw new ArgumentException("Message was null when attempting to log");
+            }
+            
+            if (logLevelParsed is null) 
+            {
+                throw new ArgumentException("Log level was null when attempting to log");
+            }
+            
+            logger.Log((LogLevel)logLevelParsed, logItem.ToString(), exception);
         }
 
         public void WorkerLogHandler(string level, string message, Exception exception) 

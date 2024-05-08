@@ -8,7 +8,7 @@ using OpenTelemetryEngine.Constants;
 
 namespace OpenTelemetryEngine.Logging
 {
-internal sealed class FunctionsResourceDetector : IResourceDetector
+    internal sealed class FunctionsResourceDetector : IResourceDetector
     {
         public Resource Detect()
         {
@@ -53,9 +53,10 @@ internal sealed class FunctionsResourceDetector : IResourceDetector
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
                 // return empty resource.
+                Console.WriteLine($"ERROR: Error detecting resource attributes: {e}");
                 return Resource.Empty;
             }
 

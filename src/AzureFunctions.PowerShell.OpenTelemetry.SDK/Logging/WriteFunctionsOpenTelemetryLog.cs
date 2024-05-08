@@ -24,13 +24,12 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 
         protected override void ProcessRecord()
         {
-            FunctionsLoggerBuilder.GetLogger().Log(LogItem, Level?.ToString());
-
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SDKConstants.FunctionsOpenTelemetryEnvironmentVariableName))) 
             {
-                WriteError(new ErrorRecord(new InvalidOperationException("OpenTelemetry environment variable not set, the log will not be correlated with the invocation")
-                        , SDKConstants.EnvironmentVariableMissingErrorCategory, ErrorCategory.InvalidOperation, null));
+                WriteWarning("OpenTelemetry environment variable not set, logs emitted from this worker instance will not be correlated with the invocation");
             }
+            
+            FunctionsLoggerBuilder.GetLogger().Log(LogItem, Level?.ToString());
         }
     }
 }
