@@ -56,7 +56,7 @@ namespace OpenTelemetryEngine.Logging
             catch (Exception e)
             {
                 // return empty resource.
-                Console.WriteLine($"ERROR: Error detecting resource attributes: {e}");
+                Console.WriteLine(WorkerConstants.SystemLogPrefix + " ERROR: Error detecting resource attributes: {e}");
                 return Resource.Empty;
             }
 
