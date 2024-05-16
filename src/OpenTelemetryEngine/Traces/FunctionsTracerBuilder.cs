@@ -6,7 +6,7 @@
 using OpenTelemetry;
 using OpenTelemetry.Trace;
 using OpenTelemetryEngine.Constants;
-using OpenTelemetryEngine.Logging;
+using OpenTelemetryEngine.Resources;
 using OpenTelemetryEngine.ResponseObjects;
 
 namespace OpenTelemetryEngine.Traces

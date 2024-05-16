@@ -28,9 +28,10 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
         // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SDKConstants.FunctionsOpenTelemetryEnvironmentVariableName))) 
+            if (!FunctionsEnvironmentHelper.IsFunctionsEnvironmentVariableEnabled() && !FunctionsEnvironmentHelper.HasWarnedAboutEnvironmentVariable()) 
             {
-                WriteWarning("OpenTelemetry environment variable not set, user generated traces will not be linked to parent trace from functions host");
+                WriteWarning(FunctionsEnvironmentHelper.GetEnvironmentVariableMissingWarningMessage());
+                FunctionsEnvironmentHelper.DidWarnAboutEnvironmentVariable();
             }
 
             var response = FunctionsTracerBuilder.BuildTracer(AdditionalSources);

@@ -20,9 +20,10 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
     {
         protected override void ProcessRecord()
         {
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SDKConstants.FunctionsOpenTelemetryEnvironmentVariableName))) 
+            if (!FunctionsEnvironmentHelper.IsFunctionsEnvironmentVariableEnabled() && !FunctionsEnvironmentHelper.HasWarnedAboutEnvironmentVariable()) 
             {
-                WriteWarning("OpenTelemetry environment variable not set, logs from your function app's default logging pipeline will not be sent via this module to OpenTelemetry");
+                WriteWarning(FunctionsEnvironmentHelper.GetEnvironmentVariableMissingWarningMessage());
+                FunctionsEnvironmentHelper.DidWarnAboutEnvironmentVariable();
             }
 
             var response = FunctionsLoggerBuilder.GetLogger().BuildResponse();
