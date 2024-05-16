@@ -11,7 +11,7 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
     {
         private static bool _environmentVariableWarned = false;
 
-        private static string WarningMessage = String.Format("{0}: Environment variable {1} not set, this module may not have the intended behavior. " + 
+        private static string _warningMessage = String.Format("{0}: Environment variable {1} not set, this module may not have the intended behavior. " + 
                                                              "Logs emitted from your function app's default pipeline will not be sent to OpenTelemetry, " +
                                                              "and traces and spans will not be correlated with telemetry emitted from the functions host.",
             SDKConstants.FunctionsOpenTelemetryModuleName, SDKConstants.FunctionsOpenTelemetryEnvironmentVariableName);
@@ -36,7 +36,7 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 
             if (!_environmentVariableWarned && !IsFunctionsEnvironmentVariableEnabled())
             {
-                warningMessage = WarningMessage;
+                warningMessage = _warningMessage;
                 return true;
             }
 
