@@ -24,22 +24,24 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
             {
                 return true;
             }
-            
+
             return false;
         }
 
         internal static bool ShouldWarnEnvironmentVariableMissing(out string? warningMessage) 
         {
-            // Even if we didn't warn, we still set this to true to prevent expensive env checks for future calls
-            _environmentVariableWarned = true;
             warningMessage = null;
 
             if (!_environmentVariableWarned && !IsFunctionsEnvironmentVariableEnabled())
             {
                 warningMessage = _warningMessage;
+
+                _environmentVariableWarned = true;
                 return true;
             }
 
+            // Even if we didn't warn, we still set this to true to prevent expensive env checks for future calls
+            _environmentVariableWarned = true;
             return false;
         }
     }
