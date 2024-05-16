@@ -20,10 +20,9 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
     {
         protected override void ProcessRecord()
         {
-            if (!FunctionsEnvironmentHelper.IsFunctionsEnvironmentVariableEnabled() && !FunctionsEnvironmentHelper.HasWarnedAboutEnvironmentVariable()) 
+            if (FunctionsEnvironmentWarningChecker.ShouldWarnEnvironmentVariableMissing(out var warningMessage)) 
             {
-                WriteWarning(FunctionsEnvironmentHelper.GetEnvironmentVariableMissingWarningMessage());
-                FunctionsEnvironmentHelper.DidWarnAboutEnvironmentVariable();
+                WriteWarning(warningMessage);
             }
 
             var response = FunctionsLoggerBuilder.GetLogger().BuildResponse();

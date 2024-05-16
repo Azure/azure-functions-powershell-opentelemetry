@@ -25,10 +25,9 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
         // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            if (!FunctionsEnvironmentHelper.IsFunctionsEnvironmentVariableEnabled() && !FunctionsEnvironmentHelper.HasWarnedAboutEnvironmentVariable()) 
+            if (FunctionsEnvironmentWarningChecker.ShouldWarnEnvironmentVariableMissing(out var warningMessage)) 
             {
-                WriteWarning(FunctionsEnvironmentHelper.GetEnvironmentVariableMissingWarningMessage());
-                FunctionsEnvironmentHelper.DidWarnAboutEnvironmentVariable();
+                WriteWarning(warningMessage);
             }
 
             var response = FunctionsActivityBuilder.StartActivity(ActivityName);
