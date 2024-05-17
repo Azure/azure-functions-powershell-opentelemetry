@@ -24,9 +24,9 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 
         protected override void ProcessRecord()
         {
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(SDKConstants.FunctionsOpenTelemetryEnvironmentVariableName))) 
+            if (FunctionsEnvironmentWarningChecker.ShouldWarnEnvironmentVariableMissing(out var warningMessage)) 
             {
-                WriteWarning("OpenTelemetry environment variable not set, logs emitted from this worker instance will not be correlated with the invocation");
+                WriteWarning(warningMessage);
             }
             
             FunctionsLoggerBuilder.GetLogger().Log(LogItem, Level?.ToString());

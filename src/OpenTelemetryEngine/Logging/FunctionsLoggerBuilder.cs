@@ -5,7 +5,9 @@
 
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
 using OpenTelemetryEngine.Types;
+using OpenTelemetryEngine.Resources;
 
 
 namespace OpenTelemetryEngine.Logging
@@ -22,7 +24,8 @@ namespace OpenTelemetryEngine.Logging
                 {
                     builder.AddOpenTelemetry(options =>
                     {
-                        options.AddOtlpExporter();
+                        options.SetResourceBuilder(ResourceBuilder.CreateDefault().AddDetector(new FunctionsResourceDetector()))
+                            .AddOtlpExporter();
                     });
                 });
 

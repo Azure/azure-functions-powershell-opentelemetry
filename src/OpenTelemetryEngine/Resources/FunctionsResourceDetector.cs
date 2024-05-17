@@ -6,7 +6,7 @@ using System.Diagnostics;
 using OpenTelemetry.Resources;
 using OpenTelemetryEngine.Constants;
 
-namespace OpenTelemetryEngine.Logging
+namespace OpenTelemetryEngine.Resources
 {
     internal sealed class FunctionsResourceDetector : IResourceDetector
     {

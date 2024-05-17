@@ -10,6 +10,7 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
     public class SDKConstants 
     {
+        internal const string FunctionsOpenTelemetryModuleName = "AzureFunctions.PowerShell.OpenTelemetry.SDK";
         internal const string FunctionsOpenTelemetryEnvironmentVariableName = "OTEL_FUNCTIONS_WORKER_ENABLED";
         internal const string EnvironmentVariableMissingErrorCategory = "OpenTelemetryEnvironmentVariableNotSet";
 
