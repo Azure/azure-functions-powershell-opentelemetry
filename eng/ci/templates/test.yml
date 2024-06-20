@@ -1,0 +1,8 @@
+jobs:
+  - job: UnitTests
+    steps:
+      - pwsh: ./build.ps1 -Configuration "Release"
+        displayName: ./build.ps1 -Configuration "Release"
+
+      - pwsh: ./build.ps1 -NoBuild -Test
+        displayName: "Running UnitTest"
