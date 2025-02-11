@@ -17,6 +17,8 @@ param(
 
 Import-Module "$PSScriptRoot\pipelineUtilities.psm1" -Force
 
+$SrcDirectory = "$PSScriptRoot\src"
+
 if (!$NoBuild.IsPresent) {
 
     $packageName = "AzureFunctions.PowerShell.OpenTelemetry.SDK"
@@ -91,6 +93,8 @@ if (!$NoBuild.IsPresent) {
 }
 #region Test ==================================================================================
 if ($Test.IsPresent) {
-    Write-Log "There are no tests! Panic!"
+    Set-Location $SrcDirectory
+    dotnet test
+    if ($LASTEXITCODE -ne 0) { throw "xunit tests failed." }
 }
 #endregion
