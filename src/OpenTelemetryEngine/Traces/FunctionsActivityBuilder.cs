@@ -94,6 +94,15 @@ namespace OpenTelemetryEngine.Traces
         {
             response?.activity?.Stop();
         }
+
+        public static GetActivityResponse GetActivityForInvocation(string invocationId)
+        {
+            if (internalActivitiesByInvocationId.ContainsKey(invocationId))
+            {
+                return new GetActivityResponse(internalActivitiesByInvocationId[invocationId]);
+            }
+            return new GetActivityResponse(Activity.Current);
+        }
     }
 }
 
