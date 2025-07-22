@@ -6,6 +6,7 @@
 using System.Management.Automation;
 using OpenTelemetryEngine.Traces;
 using OpenTelemetryEngine.ResponseObjects;
+using System.Management.Automation.Runspaces;
 
 namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
 {
@@ -42,6 +43,14 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
         protected override void ProcessRecord()
         {
             var newActivity = FunctionsActivityBuilder.StartInternalActivity(InvocationId, TraceParent, TraceState);
+
+            try
+            {
+                string script = "param($id) Set-FunctionInvocationContext -InvocationId $id";
+                _ = this.InvokeCommand.InvokeScript(script, false, PipelineResultTypes.Output, null, new object[] { InvocationId });
+            }
+            catch { }
+
             WriteObject(newActivity);
         }
     }
