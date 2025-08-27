@@ -49,7 +49,8 @@ namespace AzureFunctions.PowerShell.OpenTelemetry.SDK
                 string script = "param($id) Set-FunctionInvocationContext -InvocationId $id";
                 _ = this.InvokeCommand.InvokeScript(script, false, PipelineResultTypes.Output, null, new object[] { InvocationId });
             }
-            catch { }
+            catch (ParameterBindingException) { }
+            catch (CommandNotFoundException) { }
 
             WriteObject(newActivity);
         }
