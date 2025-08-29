@@ -70,7 +70,8 @@
         'Stop-OpenTelemetryInvocationInternal',
         'New-FunctionsOpenTelemetryTracerBuilder',
         'Start-FunctionsOpenTelemetrySpan',
-        'Stop-FunctionsOpenTelemetrySpan'
+        'Stop-FunctionsOpenTelemetrySpan',
+        'Get-CurrentActivityForInvocation'
     )
     
     # Variables to export from this module
