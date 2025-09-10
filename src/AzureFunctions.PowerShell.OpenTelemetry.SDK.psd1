@@ -21,7 +21,7 @@
     Description = 'This module contains utilities for instrumenting Azure Functions written in PowerShell with OpenTelemetry and it is to be used within the PowerShell language worker'
     
     # Minimum version of the Windows PowerShell engine required by this module
-    PowerShellVersion = '7.2'
+    PowerShellVersion = '7.4'
     
     # Name of the Windows PowerShell host required by this module
     # PowerShellHostName = ''
