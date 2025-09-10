@@ -34,7 +34,7 @@ if (!$NoBuild.IsPresent) {
 
     $sharedDependenciesPath = "$outputPath/Dependencies/"
 
-    $netCoreTFM = 'net6.0'
+    $netCoreTFM = 'net8.0'
     $publishPathSuffix = "bin/$Configuration/$netCoreTFM/publish"
 
     #region BUILD ARTIFACTS ===========================================================================
