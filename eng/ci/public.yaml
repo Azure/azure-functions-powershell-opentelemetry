@@ -4,14 +4,6 @@ trigger:
     include:
       - main
 
-schedules:
-- cron: "0 0 1/7 * *"
-  displayName: Daily midnight build
-  branches:
-    include:
-    - main
-  always: true
-
 resources:
   repositories:
     - repository: 1es

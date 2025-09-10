@@ -7,6 +7,14 @@ trigger:
 # CI only, does not trigger on PRs.
 pr: none
 
+schedules:
+- cron: "0 0 1/7 * *"
+  displayName: Daily midnight build
+  branches:
+    include:
+    - main
+  always: true
+
 resources:
   repositories:
     - repository: 1es
