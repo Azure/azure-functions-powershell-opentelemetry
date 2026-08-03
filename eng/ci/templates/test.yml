@@ -1,6 +1,9 @@
 jobs:
   - job: UnitTests
     steps:
+      - task: NuGetAuthenticate@1
+        displayName: Authenticate to CFS
+
       - pwsh: ./build.ps1 -Configuration "Release"
         displayName: ./build.ps1 -Configuration "Release"
 

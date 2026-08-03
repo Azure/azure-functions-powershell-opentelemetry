@@ -18,6 +18,30 @@ param(
 Import-Module "$PSScriptRoot\pipelineUtilities.psm1" -Force
 
 $SrcDirectory = "$PSScriptRoot\src"
+$SolutionPath = Join-Path $SrcDirectory "azure-functions-powershell-opentelemetry.sln"
+$NuGetConfigPath = Join-Path $PSScriptRoot "NuGet.config"
+
+function Invoke-Dotnet
+{
+    param(
+        [Parameter(Mandatory=$true)]
+        [string[]]
+        $Arguments
+    )
+
+    & dotnet @Arguments
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "dotnet $($Arguments -join ' ') failed."
+    }
+}
+
+if (!$NoBuild.IsPresent -or $Test.IsPresent)
+{
+    Write-Log "Restoring solution from the configured package source..."
+    $restoreArguments = @("restore", $SolutionPath, "--configfile", $NuGetConfigPath)
+    Invoke-Dotnet -Arguments $restoreArguments
+}
 
 if (!$NoBuild.IsPresent) {
 
@@ -63,7 +87,8 @@ if (!$NoBuild.IsPresent) {
         Push-Location $project.Value
         try
         {
-            dotnet publish -f $netCoreTFM -c $Configuration
+            $publishArguments = @("publish", "--framework", $netCoreTFM, "--configuration", $Configuration, "--no-restore")
+            Invoke-Dotnet -Arguments $publishArguments
         }
         finally
         {
@@ -93,8 +118,7 @@ if (!$NoBuild.IsPresent) {
 }
 #region Test ==================================================================================
 if ($Test.IsPresent) {
-    Set-Location $SrcDirectory
-    dotnet test
-    if ($LASTEXITCODE -ne 0) { throw "xunit tests failed." }
+    $testArguments = @("test", $SolutionPath, "--no-restore")
+    Invoke-Dotnet -Arguments $testArguments
 }
 #endregion
